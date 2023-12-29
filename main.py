@@ -2,7 +2,7 @@ import uuid
 import random
 import sqlite3
 import requests
-from pydantic import BaseModel, validator
+from pydantic import BaseModel, field_validator
 from fastapi import Header, FastAPI, HTTPException
 
 app = FastAPI()
@@ -35,14 +35,14 @@ class User(BaseModel):
 	city: str
 
 	# validator the phone_number
-	@validator("phone_number")
+	@field_validator("phone_number")
 	def validate_phone_number(cls, v):
 		if not v.isnumeric() or len(v) != 11:
 			raise ValueError("Phone number must be 11 digits.")
 		return v
 
 	# validate the name
-	@validator("name")
+	@field_validator("name")
 	def validate_name(cls, v):
 		if not v.strip():
 			raise ValueError("Name cannot be empty.")
